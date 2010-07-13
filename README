@@ -1,0 +1,33 @@
+*********************************************
+*              form-processing              *
+*********************************************
+by Eric L. Epps
+http://ericepps.me
+
+This is a combination of my form validation and processing scripts. It consists of 
+the following actions:
+ * validate form data both client- and server-side
+ * process form data and send it to any/all of:
+    - send to an e-mail address
+	- store in a delimited file
+	- a FileBound E-Form
+	- upload attached files to a specified directory
+	- send a notification e-mail
+	
+File Descriptions:
+ * js/formValidate.js - Client-side validation
+ * php/formValidation.php - Should be included above the head of the form page (or 
+     page the form recirects to). All other PHP files are included from this page.
+	 Debugging mode can be turned on/off on this page as well.
+ * php/formDefaults.php - All defaults (default e-mail addresses, SMTP servers, paths,
+     etc.) are stored in this file.
+ * php/form2Delimited.php - Stores form data as a delimited file.
+ * php/form2EForm.php - Stores form data as FileBound E-Form.
+ * php/form2e-mail.php - Sends form data as an HTML e-mail.
+ * php/formAttachedFiles.php - Processes uploaded files and stores them in a specified directory.
+ * php/forme-mailNotify.php - Sends a notification e-mail to specified e-mail address(es).
+
+
+What's Missing:
+ * HTML Snippets and documentation for how to structure forms for use with these scripts
+ * Default basic CSS styles
