@@ -119,7 +119,7 @@ do {
 	$filePosition = strpos($sendingFormSub,'<input');
 	if ($filePosition !== FALSE) {
 		$singleElement = getStringByStartEnd($sendingFormSub,'<input','/>');
-		$sendingFormSub = substr($sendingFormSub,$filePosition+strlen($singleElement));
+		$sendingFormSub = substr($sendingFormSub,$filePosition+strlen($singleElement)-1);
 		$sendingFormElement[] = $singleElement;
 	}
 } while ($filePosition > 0);
@@ -130,7 +130,7 @@ do {
 	$filePosition = strpos($sendingFormSub,'<select');
 	if ($filePosition !== FALSE) {
 		$singleElement = getStringByStartEnd($sendingFormSub,'<select','</select>');
-		$sendingFormSub = substr($sendingFormSub,$filePosition+strlen($singleElement));
+		$sendingFormSub = substr($sendingFormSub,$filePosition+strlen($singleElement)-1);
 		$sendingFormElement[] = $singleElement;
 	}
 } while ($filePosition > 0);
@@ -141,7 +141,7 @@ do {
 	$filePosition = strpos($sendingFormSub,'<textarea');
 	if ($filePosition !== FALSE) {
 		$singleElement = getStringByStartEnd($sendingFormSub,'<textarea','</textarea>');
-		$sendingFormSub = substr($sendingFormSub,$filePosition+strlen($singleElement));
+		$sendingFormSub = substr($sendingFormSub,$filePosition+strlen($singleElement)-1);
 		$sendingFormElement[] = $singleElement;
 	}
 } while ($filePosition > 0);
