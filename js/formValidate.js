@@ -78,7 +78,7 @@ function validateEmail(node) {
 	}
 }
 // use to allow only numeric characters with a minimum, maximum, and/or exact number of digits in a form element
-// add onblur="formatAlpha(this,x,y,z);" to the form element where (you can use more than one):
+// add onblur="validateNumber(this,x,y,z);" to the form element where (you can use more than one):
 //    x is the minimum number of digits required (0 to ignore)
 //    y is the maximum number of digits required (0 to ignore)
 //    z is the exact number of digits required (0 to ignore)
@@ -110,6 +110,45 @@ function validateNumber(node,minLength,maxLength,exactLength) {
 		return false;
 	}
 }
+
+// use to allow only numeric/decimal characters with a minimum, maximum, and/or exact number of digits in a form element
+// add onblur="validateDecNumber(this,x,y,z);" to the form element where (you can use more than one):
+//    x is the minimum number of digits required (0 to ignore)
+//    y is the maximum number of digits required (0 to ignore)
+//    z is the exact number of digits required (0 to ignore)
+function validateDecNumber(node,minLength,maxLength,exactLength) {
+	node.style.backgroundColor = 'white';
+	displayError = "";
+	removeNonPeriodSpecial(node);
+	removeAlphas(node);
+	if (minLength > 0) {
+		if (node.value.length < minLength) {
+			displayError = node.title + " must be at least " + minLength + " digits.\n";
+			node.style.backgroundColor = '#FFCED6';
+		}
+	}
+	if (maxLength > 0) {
+		if (node.value.length > maxLength) {
+			displayError = node.title + " cannot be longer than " + maxLength + " digits.\n";
+			node.style.backgroundColor = '#FFCED6';
+		}
+	}
+	if (exactLength > 0) {
+		if (node.value.length !== exactLength) {
+			displayError = node.title + " must be exactly " + exactLength + " digits.\n";
+			node.style.backgroundColor = '#FFCED6';
+		}
+	}
+	if (node.value.indexOf('.') != node.value.lastIndexOf('.')) {
+			displayError = node.title + " must have exactly one decimal point.\n";
+			node.style.backgroundColor = '#FFCED6';
+	}
+	if (displayError !== '') {
+		window.alert(displayError);
+		return false;
+	}
+}
+
 // use to format a 9-digit social security number in 000-00-0000 format in a form element
 // add onblur="validateSSN(this);" to the form element 
 function validateSSN(node) {
@@ -252,6 +291,15 @@ function removeSpecialChars(node) {
 
      function filterSpecial(str) {
           re = /\ |$|,|@|#|~|`|\%|\*|\^|\&|\(|\)|\+|\=|\[|\-|\_|\]|\[|\}|\{|\;|\:|\'|\"|\<|\>|\?|\||\\|\!|\$|\./g;
+          return str.replace(re, "");
+     }
+}
+// removes non alpha-numeric characters
+function removeNonPeriodSpecial(node) {
+     node.value=filterSpecial(node.value);
+
+     function filterSpecial(str) {
+          re = /\ |$|,|@|#|~|`|\%|\*|\^|\&|\(|\)|\+|\=|\[|\-|\_|\]|\[|\}|\{|\;|\:|\'|\"|\<|\>|\?|\||\\|\!|\$/g;
           return str.replace(re, "");
      }
 }
