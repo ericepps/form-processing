@@ -32,7 +32,9 @@ if ($laQuestion != '') {
 }
 
 if ($saQuestion != '') {
-	$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $saQuestion . '</label>' . "\n  " . '<input class="' . $required . '" id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $saQuestionCode . '" type="text" '.$validation.'/>' . "\n" . '</li>';
+	$maxlength = '';
+	if (is_numeric($_POST['saMaxLength'])) $maxlength = ' maxlength="'.$_POST['saMaxLength'].'"';
+	$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $saQuestion . '</label>' . "\n  " . '<input class="' . $required . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $saQuestionCode . '" type="text" '.$validation.'/>' . "\n" . '</li>';
 }
 
 if ($mcQuestion != '') {
@@ -64,11 +66,7 @@ if ($mcQuestion != '') {
 	$mcQ .= "\n" . '</ol></div></fieldset></li>'; 
 }
 
-$fp = fopen('/host/www.svcc.edu/fileDrop/eng103/'.$questionNumber.'.php', 'x');
-fwrite($fp, $mcQ);
-fclose($fp);
-
-$fullForm = $_POST['previousQuestions'] . $mcQ;
+$fullForm = $_POST['previousQuestions'] . str_replace('class=" ','class="',str_replace(' class=""','',$mcQ));
 $namePrefix = $_POST['namePrefix'];
 if ($_POST['qNum'] < 1) { $qNum = 1; } else { $qNum = $_POST['qNum'] + 1; }
 ?>
@@ -77,11 +75,15 @@ if ($_POST['qNum'] < 1) { $qNum = 1; } else { $qNum = $_POST['qNum'] + 1; }
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Add Questions</title>
+<title>Form Creator</title>
 <link type="text/css" rel="stylesheet" href="http://www.svcc.edu/css/forms.css" />
+<style type="text/css">
+ol>fieldset { margin-top:15px; }
+</style>
 <script type="text/javascript">
 function showElement(elName) {
 	document.getElementById(elName).style.display = 'block';
+	window.location.hash=elName;
 }
 function showElementInline(elName) {
 	document.getElementById(elName).style.display = 'inline';
@@ -141,22 +143,25 @@ function getElementsByClassName(oElm, strTagName, strClassName)
 
 <body>
 <form method="post" action="addQuestions.php">
-<textarea name="previousQuestions" cols="120" rows="10" wrap="off">
+<textarea name="previousQuestions" style="width:99.5%;" rows="10" wrap="off">
 <?php echo $fullForm; ?>
 </textarea>
-<ol class="nobullet">
-<li class="floatLeft">
-    <label for="namePrefix">Name Prefix (section number, etc.)</label>
-    <input class="xsWidth" id="namePrefix" name="namePrefix" title="Name Prefix" value="<?php echo $namePrefix; ?>" type="text" />
-</li>
-<li class="floatLeft">
-    <label for="qNum">Question Number</label>
-	<input type="text" name="qNum" value="<?php echo $qNum; ?>" id="qNum" />
-</li>
-<li class="clearLeft">
-    <input id="qRequired" name="qRequired" title="Required?" value="Y" type="checkbox" />
-    <label class="besideRight" for="qRequired">Is this question required?</label>
-</li>
+<ol class="nobullet nopadding">
+<fieldset title="Question Options">
+<legend>Question Options</legend>
+    <li class="floatLeft">
+        <label for="namePrefix">Name Prefix <span class="entryExample">(section number, etc.)</span></label>
+        <input class="xsWidth" id="namePrefix" name="namePrefix" title="Name Prefix" value="<?php echo $namePrefix; ?>" type="text" />
+    </li>
+    <li class="floatLeft">
+        <label for="qNum">Question Number <span class="entryExample">(or name, combined with Prefix if applicable)</span></label>
+        <input type="text" name="qNum" value="<?php echo $qNum; ?>" id="qNum" />
+    </li>
+    <li class="clearLeft">
+        <input id="qRequired" name="qRequired" title="Required?" value="Y" type="checkbox" />
+        <label class="besideRight" for="qRequired"><strong>Is this question required?</strong></label>
+    </li>
+</fieldset>
 
 <!--  SHORT ANSWER  -->
 <fieldset title="Short Answer">
@@ -165,6 +170,10 @@ function getElementsByClassName(oElm, strTagName, strClassName)
     <label for="saQuestion">Question</label>
     <input class="xlWidth" id="saQuestion" name="saQuestion" title="Short Answer Question" type="text" /><br />
     <ul class="nopadding">
+    <li>
+	    <label for="saMaxLength">Maximum Length</label>
+    	<input maxlength="3" class="xsWidth" id="saMaxLength" name="saMaxLength" title="Maximum Length" type="text" />
+	</li>
     <fieldset title="Validation">
         <legend>Validation</legend>
         <li>
