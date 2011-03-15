@@ -6,6 +6,7 @@ if (is_numeric($_POST['qNum'])) {
 }
 $required = '';
 $validation = '';
+if ($_POST['qHelp'] != '') $helptext = '<span class="entryExample">'.$_POST['qHelp'].'</span>';
 if ($_POST['qRequired'] == 'Y') $required = ' required';
 if ($_POST['qvEmailAddress'] == 'Y') $validation = 'onblur="validateEmail(this);"';
 if ($_POST['qvPhoneNumber'] == 'Y') $validation = 'onblur="formatPhoneNum(this);"';
@@ -24,21 +25,21 @@ $mcQuestionCode = str_replace('"',"'",$mcQuestion);
 $mcQ = "\n\n";
 
 if ($tfQuestion != '') {
-	$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="trueFalse">' . "\n  " . '<legend>' . $tfQuestion . '</legend>' . "\n  " . '<div class="nopadding"><ol>' . "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 't" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="True" type="radio" '.$validation.'/><label class="besideRight" for="' . $questionNumber . 't">True</label></li>' . "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="False" type="radio" /><label class="besideRight" for="' . $questionNumber . 'f">False</label></li>' . "\n" . '</ol></div></fieldset></li>';
+	$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="trueFalse">' . "\n  " . '<legend>' . $tfQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<div class="nopadding"><ol>' . "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 't" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="True" type="radio" '.$validation.'/><label class="besideRight" for="' . $questionNumber . 't">True</label></li>' . "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="False" type="radio" /><label class="besideRight" for="' . $questionNumber . 'f">False</label></li>' . "\n" . '</ol></div></fieldset></li>';
 }
 
 if ($laQuestion != '') {
-	$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $laQuestion . '</label>' . "\n  " . '<textarea id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $laQuestionCode . '" cols="' . $_POST['laColumns'] . '" rows="' . $_POST['laRows'] . '" class="' . $required . '"><\/textarea>' . "\n" . '</li>';
+	$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $laQuestion . ' ' . $helptext . '</label>' . "\n  " . '<textarea id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $laQuestionCode . '" cols="' . $_POST['laColumns'] . '" rows="' . $_POST['laRows'] . '" class="' . $required . '"><\/textarea>' . "\n" . '</li>';
 }
 
 if ($saQuestion != '') {
 	$maxlength = '';
 	if (is_numeric($_POST['saMaxLength'])) $maxlength = ' maxlength="'.$_POST['saMaxLength'].'"';
-	$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $saQuestion . '</label>' . "\n  " . '<input class="' . $required . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $saQuestionCode . '" type="text" '.$validation.'/>' . "\n" . '</li>';
+	$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $saQuestion . ' ' . $helptext . '</label>' . "\n  " . '<input class="' . $required . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $saQuestionCode . '" type="text" '.$validation.'/>' . "\n" . '</li>';
 }
 
 if ($mcQuestion != '') {
-	$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . '</legend>' . "\n  " . '<div class="nopadding"><ol>';
+	$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<div class="nopadding"><ol>';
     if ($_POST['answerA'] != '') {
         $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'a" name="' . $questionNumber . '" title="' . $mcQuestionCode . '" value="a" type="radio" /><label class="besideRight" for="' . $questionNumber . 'a">' . $_POST['answerA'] . '</label></li>'; 
     }
@@ -75,7 +76,7 @@ if ($_POST['qNum'] < 1) { $qNum = 1; } else { $qNum = $_POST['qNum'] + 1; }
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Form Creator</title>
+<title>Form Creator - Add Questions</title>
 <link type="text/css" rel="stylesheet" href="http://www.svcc.edu/css/forms.css" />
 <style type="text/css">
 ol>fieldset { margin-top:15px; }
@@ -160,6 +161,10 @@ function getElementsByClassName(oElm, strTagName, strClassName)
     <li class="clearLeft">
         <input id="qRequired" name="qRequired" title="Required?" value="Y" type="checkbox" />
         <label class="besideRight" for="qRequired"><strong>Is this question required?</strong></label>
+    </li>
+    <li>
+        <label for="qHelp">Help Text</label>
+        <input type="text" name="qHelp" id="qHelp" class="xlWidth" />
     </li>
 </fieldset>
 
