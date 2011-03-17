@@ -39,32 +39,39 @@ if ($saQuestion != '') {
 }
 
 if ($mcQuestion != '') {
-	$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<div class="nopadding"><ol>';
+	if ($_POST['mcType'] == 'checkbox') {
+		$questionNumber2 = $questionNumber . '[]';
+		$questionType = 'checkbox';
+	} else {
+		$questionNumber2 = $questionNumber;
+		$questionType = 'radio';
+	}
+	$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<ol>';
     if ($_POST['answerA'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'a" name="' . $questionNumber . '" title="' . $mcQuestionCode . '" value="a" type="radio" /><label class="besideRight" for="' . $questionNumber . 'a">' . $_POST['answerA'] . '</label></li>'; 
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'a" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="a" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'a">' . $_POST['answerA'] . '</label></li>'; 
     }
     if ($_POST['answerB'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'b" name="' . $questionNumber . '" title="' . $mcQuestionCode . '" value="b" type="radio" /><label class="besideRight" for="' . $questionNumber . 'b">' . $_POST['answerB'] . '</label></li>'; 
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'b" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="b" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'b">' . $_POST['answerB'] . '</label></li>'; 
     }
     if ($_POST['answerC'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'c" name="' . $questionNumber . '" title="' . $mcQuestionCode . '" value="c" type="radio" /><label class="besideRight" for="' . $questionNumber . 'c">' . $_POST['answerC'] . '</label></li>'; 
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'c" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="c" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'c">' . $_POST['answerC'] . '</label></li>'; 
     }
     if ($_POST['answerD'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'd" name="' . $questionNumber . '" title="' . $mcQuestionCode . '" value="d" type="radio" /><label class="besideRight" for="' . $questionNumber . 'd">' . $_POST['answerD'] . '</label></li>'; 
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'd" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="d" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'd">' . $_POST['answerD'] . '</label></li>'; 
     }
     if ($_POST['answerE'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'e" name="' . $questionNumber . '" title="' . $mcQuestionCode . '" value="e" type="radio" /><label class="besideRight" for="' . $questionNumber . 'e">' . $_POST['answerE'] . '</label></li>'; 
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'e" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="e" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'e">' . $_POST['answerE'] . '</label></li>'; 
     }
     if ($_POST['answerF'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber . '" title="' . $mcQuestionCode . '" value="f" type="radio" /><label class="besideRight" for="' . $questionNumber . 'f">' . $_POST['answerF'] . '</label></li>';
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="f" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'f">' . $_POST['answerF'] . '</label></li>';
     }
     if ($_POST['answerG'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'g" name="' . $questionNumber . '" title="' . $mcQuestionCode . '" value="g" type="radio" /><label class="besideRight" for="' . $questionNumber . 'g">' . $_POST['answerG'] . '</label></li>'; 
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'g" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="g" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'g">' . $_POST['answerG'] . '</label></li>'; 
     }
     if ($_POST['answerH'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'h" name="' . $questionNumber . '" title="' . $mcQuestionCode . '" value="h" type="radio" /><label class="besideRight" for="' . $questionNumber . 'h">' . $_POST['answerH'] . '</label></li>';
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'h" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="h" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'h">' . $_POST['answerH'] . '</label></li>';
     }
-	$mcQ .= "\n" . '</ol></div></fieldset></li>'; 
+	$mcQ .= "\n" . '</ol></fieldset></li>'; 
 }
 
 $fullForm = $_POST['previousQuestions'] . str_replace('class=" ','class="',str_replace(' class=""','',$mcQ));
@@ -81,6 +88,7 @@ if ($_POST['qNum'] < 1) { $qNum = 1; } else { $qNum = $_POST['qNum'] + 1; }
 <style type="text/css">
 ol>fieldset { margin-top:15px; }
 </style>
+<script language="javascript" type="text/javascript" src="editarea/edit_area/edit_area_full.js"></script>
 <script type="text/javascript">
 function showElement(elName) {
 	document.getElementById(elName).style.display = 'block';
@@ -139,12 +147,15 @@ function getElementsByClassName(oElm, strTagName, strClassName)
 	}
 	return (arrReturnElements)
 }
+// initialize code coloring
+// http://www.cdolivet.com/index.php?page=editArea
+editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight: true, allow_toggle: false });
 </script>
 </head>
 
 <body>
 <form method="post" action="addQuestions.php">
-<textarea name="previousQuestions" style="width:99.5%;" rows="10" wrap="off">
+<textarea name="previousQuestions" id="previousQuestions" style="width:99.5%;" rows="10" wrap="off">
 <?php echo $fullForm; ?>
 </textarea>
 <ol class="nobullet nopadding">
@@ -235,6 +246,20 @@ function getElementsByClassName(oElm, strTagName, strClassName)
 <fieldset title="Multiple Choice">
 <legend><a href="javascript:toggleElementB('multipleChoice');">Multiple Choice</a></legend>
 <li class="jsHide" id="multipleChoice">
+    <fieldset id="mcType" class="multipleChoice">
+    <legend>Selection Type </legend>
+    <ol>
+        <li>
+            <input id="mcTypeRadio" name="mcType" title="Selection Type" value="radio" type="radio" checked="checked" />
+            <label class="besideRight" for="mcTypeRadio">Radio (select one)</label>
+        </li>
+        <li>
+            <input id="mcTypeCheckbox" name="mcType" title="Selection Type" value="checkbox" type="radio" />
+            <label class="besideRight" for="mcTypeCheckbox">Checkbox (select more than one)</label>
+        </li>
+    </ol>
+    </fieldset>
+
     <label for="mcQuestion">Question</label>
     <input class="xlWidth" id="mcQuestion" name="mcQuestion" title="Multiple Choice Question" type="text" />
     <ol type="A">
@@ -301,6 +326,51 @@ function getElementsByClassName(oElm, strTagName, strClassName)
     </ol>
 </li>
 </fieldset>
+
+<!--  DROP-DOWN BOX
+<fieldset title="Drop-Down Box">
+<legend><a href="javascript:toggleElementB('dropDown');">Drop-Down Box</a></legend>
+<li class="jsHide" id="dropDown">
+
+    <label for="ddQuestion">Question</label>
+    <input class="xlWidth" id="ddQuestion" name="ddQuestion" title="Drop-Down Question" type="text" />
+    <ol type="A">
+        <li>
+            <label for="">Answer A</label>
+            <input class="xlWidth" id="answerA" name="answerA" title="Answer A" type="text" />
+        </li>
+        <li>
+            <label for="">Answer B</label>
+            <input class="xlWidth" id="answerB" name="answerB" title="Answer B" type="text" />
+        </li>
+        <li>
+            <label for="">Answer C</label>
+            <input class="xlWidth" id="answerC" name="answerC" title="Answer C" type="text" />
+        </li>
+        <li>
+            <label for="">Answer D</label>
+            <input class="xlWidth" id="answerD" name="answerD" title="Answer D" type="text" />
+        </li>
+        <li>
+            <label for="">Answer E</label>
+            <input class="xlWidth" id="answerE" name="answerE" title="Answer E" type="text" />
+        </li>
+        <li>
+            <label for="">Answer F</label>
+            <input class="xlWidth" id="answerF" name="answerF" title="Answer F" type="text" />
+        </li>
+        <li>
+            <label for="">Answer G</label>
+            <input class="xlWidth" id="answerG" name="answerG" title="Answer G" type="text" />
+        </li>
+        <li>
+            <label for="">Answer H</label>
+            <input class="xlWidth" id="answerH" name="answerH" title="Answer H" type="text" />
+        </li>
+    </ol>
+</li>
+</fieldset>  -->
+
 <li class="submitButton" style="text-align:center; clear:left;"><input type="submit" /></li>
 </ol>
 </form>
