@@ -46,40 +46,79 @@ if ($mcQuestion != '') {
 		$questionNumber2 = $questionNumber;
 		$questionType = 'radio';
 	}
-	$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<ol>';
-    if ($_POST['answerA'] != '') {
-		$mcValueCode = str_replace('"',"'",$_POST['valueA']);
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'A" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'A">' . $_POST['answerA'] . '</label></li>'; 
-    }
-    if ($_POST['answerB'] != '') {
-		$mcValueCode = str_replace('"',"'",$_POST['valueB']);
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'b" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'b">' . $_POST['answerB'] . '</label></li>'; 
-    }
-    if ($_POST['answerC'] != '') {
-		$mcValueCode = str_replace('"',"'",$_POST['valueC']);
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'c" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'c">' . $_POST['answerC'] . '</label></li>'; 
-    }
-    if ($_POST['answerD'] != '') {
-		$mcValueCode = str_replace('"',"'",$_POST['valueD']);
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'd" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'd">' . $_POST['answerD'] . '</label></li>'; 
-    }
-    if ($_POST['answerE'] != '') {
-		$mcValueCode = str_replace('"',"'",$_POST['valueE']);
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'e" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'e">' . $_POST['answerE'] . '</label></li>'; 
-    }
-    if ($_POST['answerF'] != '') {
-		$mcValueCode = str_replace('"',"'",$_POST['valueF']);
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'f">' . $_POST['answerF'] . '</label></li>';
-    }
-    if ($_POST['answerG'] != '') {
-		$mcValueCode = str_replace('"',"'",$_POST['valueG']);
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'g" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'g">' . $_POST['answerG'] . '</label></li>'; 
-    }
-    if ($_POST['answerH'] != '') {
-		$mcValueCode = str_replace('"',"'",$_POST['valueH']);
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'h" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'h">' . $_POST['answerH'] . '</label></li>';
-    }
-	$mcQ .= "\n" . '</ol></fieldset></li>'; 
+	if ($_POST['mcType'] == 'select') {
+		$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $mcQuestion . ' ' . $helptext . '</label>' . "\n  " . '<select class="" id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $mcQuestion . '">';
+
+		if ($_POST['answerA'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueA']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerA'] . '</option>';
+		}
+		if ($_POST['answerB'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueB']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerB'] . '</option>';
+		}
+		if ($_POST['answerC'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueC']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerC'] . '</option>';
+		}
+		if ($_POST['answerD'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueD']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerD'] . '</option>';
+		}
+		if ($_POST['answerE'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueE']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerE'] . '</option>';
+		}
+		if ($_POST['answerF'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueF']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerF'] . '</option>';
+		}
+		if ($_POST['answerG'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueG']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerG'] . '</option>';
+		}
+		if ($_POST['answerH'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueH']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerH'] . '</option>';
+		}
+		$mcQ .= "\n  </select></li>";
+	} else {
+		// either a radio or checkbox grouping
+		$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<ol>';
+		if ($_POST['answerA'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueA']);
+			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'A" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'A">' . $_POST['answerA'] . '</label></li>'; 
+		}
+		if ($_POST['answerB'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueB']);
+			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'b" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'b">' . $_POST['answerB'] . '</label></li>'; 
+		}
+		if ($_POST['answerC'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueC']);
+			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'c" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'c">' . $_POST['answerC'] . '</label></li>'; 
+		}
+		if ($_POST['answerD'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueD']);
+			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'd" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'd">' . $_POST['answerD'] . '</label></li>'; 
+		}
+		if ($_POST['answerE'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueE']);
+			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'e" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'e">' . $_POST['answerE'] . '</label></li>'; 
+		}
+		if ($_POST['answerF'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueF']);
+			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'f">' . $_POST['answerF'] . '</label></li>';
+		}
+		if ($_POST['answerG'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueG']);
+			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'g" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'g">' . $_POST['answerG'] . '</label></li>'; 
+		}
+		if ($_POST['answerH'] != '') {
+			$mcValueCode = str_replace('"',"'",$_POST['valueH']);
+			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'h" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'h">' . $_POST['answerH'] . '</label></li>';
+		}
+		$mcQ .= "\n" . '</ol></fieldset></li>'; 
+	}
 }
 
 $fullForm = $_POST['previousQuestions'] . str_replace('class=" ','class="',str_replace(' class=""','',$mcQ));
@@ -255,6 +294,8 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
 <fieldset title="Multiple Choice">
 <legend><a href="javascript:toggleElementB('multipleChoice');">Multiple Choice</a></legend>
 <li class="jsHide" id="multipleChoice">
+<ol class="nobullet nopadding">
+<li>
     <fieldset id="mcType" class="multipleChoice">
     <legend>Selection Type </legend>
     <ol>
@@ -266,9 +307,14 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
             <input id="mcTypeCheckbox" name="mcType" title="Selection Type" value="checkbox" type="radio" />
             <label class="besideRight" for="mcTypeCheckbox">Checkbox (select more than one)</label>
         </li>
+        <li>
+            <input id="mcTypeSelect" name="mcType" title="Selection Type" value="select" type="radio" />
+            <label class="besideRight" for="mcTypeSelect">Select (drop-down, select one)</label>
+        </li>
     </ol>
     </fieldset>
-
+</li>
+<li>
     <label for="mcQuestion">Question</label>
     <input class="xlWidth" id="mcQuestion" name="mcQuestion" title="Multiple Choice Question" type="text" />
     <ol type="A">
@@ -329,7 +375,7 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
             <input class="xlWidth" id="answerH" name="answerH" title="Answer H" type="text" />
         </li>
     </ol>
-</li>
+</li></ol>
 </fieldset>
 
 <!--  TRUE/FALSE  -->
