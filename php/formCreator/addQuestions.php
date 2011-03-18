@@ -48,28 +48,36 @@ if ($mcQuestion != '') {
 	}
 	$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<ol>';
     if ($_POST['answerA'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'a" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="a" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'a">' . $_POST['answerA'] . '</label></li>'; 
+		$mcValueCode = str_replace('"',"'",$_POST['valueA']);
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'A" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'A">' . $_POST['answerA'] . '</label></li>'; 
     }
     if ($_POST['answerB'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'b" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="b" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'b">' . $_POST['answerB'] . '</label></li>'; 
+		$mcValueCode = str_replace('"',"'",$_POST['valueB']);
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'b" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'b">' . $_POST['answerB'] . '</label></li>'; 
     }
     if ($_POST['answerC'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'c" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="c" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'c">' . $_POST['answerC'] . '</label></li>'; 
+		$mcValueCode = str_replace('"',"'",$_POST['valueC']);
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'c" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'c">' . $_POST['answerC'] . '</label></li>'; 
     }
     if ($_POST['answerD'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'd" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="d" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'd">' . $_POST['answerD'] . '</label></li>'; 
+		$mcValueCode = str_replace('"',"'",$_POST['valueD']);
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'd" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'd">' . $_POST['answerD'] . '</label></li>'; 
     }
     if ($_POST['answerE'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'e" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="e" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'e">' . $_POST['answerE'] . '</label></li>'; 
+		$mcValueCode = str_replace('"',"'",$_POST['valueE']);
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'e" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'e">' . $_POST['answerE'] . '</label></li>'; 
     }
     if ($_POST['answerF'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="f" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'f">' . $_POST['answerF'] . '</label></li>';
+		$mcValueCode = str_replace('"',"'",$_POST['valueF']);
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'f">' . $_POST['answerF'] . '</label></li>';
     }
     if ($_POST['answerG'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'g" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="g" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'g">' . $_POST['answerG'] . '</label></li>'; 
+		$mcValueCode = str_replace('"',"'",$_POST['valueG']);
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'g" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'g">' . $_POST['answerG'] . '</label></li>'; 
     }
     if ($_POST['answerH'] != '') {
-        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'h" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="h" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'h">' . $_POST['answerH'] . '</label></li>';
+		$mcValueCode = str_replace('"',"'",$_POST['valueH']);
+        $mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'h" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'h">' . $_POST['answerH'] . '</label></li>';
     }
 	$mcQ .= "\n" . '</ol></fieldset></li>'; 
 }
@@ -87,6 +95,7 @@ if ($_POST['qNum'] < 1) { $qNum = 1; } else { $qNum = $_POST['qNum'] + 1; }
 <link type="text/css" rel="stylesheet" href="http://www.svcc.edu/css/forms.css" />
 <style type="text/css">
 ol>fieldset { margin-top:15px; }
+html, body { font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; font-size:12px; }
 </style>
 <script language="javascript" type="text/javascript" src="editarea/edit_area/edit_area_full.js"></script>
 <script type="text/javascript">
@@ -155,7 +164,7 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
 
 <body>
 <form method="post" action="addQuestions.php">
-<textarea name="previousQuestions" id="previousQuestions" style="width:99.5%;" rows="10" wrap="off">
+<textarea name="previousQuestions" id="previousQuestions" style="width:99.5%;" rows="8" wrap="off">
 <?php echo $fullForm; ?>
 </textarea>
 <ol class="nobullet nopadding">
@@ -264,35 +273,59 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
     <input class="xlWidth" id="mcQuestion" name="mcQuestion" title="Multiple Choice Question" type="text" />
     <ol type="A">
         <li>
-            <label for="">Answer A</label>
+            <label for="mcValueA" class="floatLeft" style="margin-right:1em;">Value A<br/>
+            <input class="sWidth" id="mcValueA" name="valueA" title="Value A" type="text" value="a" />
+            </label>
+            <label for="answerA">Display A</label>
             <input class="xlWidth" id="answerA" name="answerA" title="Answer A" type="text" />
         </li>
         <li>
-            <label for="">Answer B</label>
+            <label for="mcValueB" class="floatLeft" style="margin-right:1em;">Value B<br/>
+            <input class="sWidth" id="mcValueB" name="valueB" title="Value B" type="text" value="b" />
+            </label>
+            <label for="answerB">Display B</label>
             <input class="xlWidth" id="answerB" name="answerB" title="Answer B" type="text" />
         </li>
         <li>
-            <label for="">Answer C</label>
+            <label for="mcValueC" class="floatLeft" style="margin-right:1em;">Value C<br/>
+            <input class="sWidth" id="mcValueC" name="valueC" title="Value C" type="text" value="c" />
+            </label>
+            <label for="answerC">Display C</label>
             <input class="xlWidth" id="answerC" name="answerC" title="Answer C" type="text" />
         </li>
         <li>
-            <label for="">Answer D</label>
+            <label for="mcValueD" class="floatLeft" style="margin-right:1em;">Value D<br/>
+            <input class="sWidth" id="mcValueD" name="valueD" title="Value D" type="text" value="d" />
+            </label>
+            <label for="answerD">Display D</label>
             <input class="xlWidth" id="answerD" name="answerD" title="Answer D" type="text" />
         </li>
         <li>
-            <label for="">Answer E</label>
+            <label for="mcValueE" class="floatLeft" style="margin-right:1em;">Value E<br/>
+            <input class="sWidth" id="mcValueE" name="valueE" title="Value E" type="text" value="e" />
+            </label>
+            <label for="answerE">Display E</label>
             <input class="xlWidth" id="answerE" name="answerE" title="Answer E" type="text" />
         </li>
         <li>
-            <label for="">Answer F</label>
+            <label for="mcValueF" class="floatLeft" style="margin-right:1em;">Value F<br/>
+            <input class="sWidth" id="mcValueF" name="valueF" title="Value F" type="text" value="f" />
+            </label>
+            <label for="answerF">Display F</label>
             <input class="xlWidth" id="answerF" name="answerF" title="Answer F" type="text" />
         </li>
         <li>
-            <label for="">Answer G</label>
+            <label for="mcValueG" class="floatLeft" style="margin-right:1em;">Value G<br/>
+            <input class="sWidth" id="mcValueG" name="valueG" title="Value G" type="text" value="g" />
+            </label>
+            <label for="answerG">Display G</label>
             <input class="xlWidth" id="answerG" name="answerG" title="Answer G" type="text" />
         </li>
         <li>
-            <label for="">Answer H</label>
+            <label for="mcValueH" class="floatLeft" style="margin-right:1em;">Value H<br/>
+            <input class="sWidth" id="mcValueH" name="valueH" title="Value H" type="text" value="h" />
+            </label>
+            <label for="answerH">Display H</label>
             <input class="xlWidth" id="answerH" name="answerH" title="Answer H" type="text" />
         </li>
     </ol>
@@ -371,7 +404,7 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
 </li>
 </fieldset>  -->
 
-<li class="submitButton" style="text-align:center; clear:left;"><input type="submit" /></li>
+<li class="submitButton"><input type="submit" /></li>
 </ol>
 </form>
 <script type="text/javascript">jsHide();</script>
