@@ -22,22 +22,28 @@ $saQuestion = trim($_POST['saQuestion']);
 $saQuestionCode = str_replace('"',"'",$saQuestion);
 $mcQuestion = trim($_POST['mcQuestion']);
 $mcQuestionCode = str_replace('"',"'",$mcQuestion);
+$cbQuestion = trim($_POST['cbQuestion']);
+$cbQuestionCode = str_replace('"',"'",$cbQuestion);
 $mcQ = "\n\n";
 
+// TRUE/FALSE
 if ($tfQuestion != '') {
 	$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="trueFalse">' . "\n  " . '<legend>' . $tfQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<div class="nopadding"><ol>' . "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 't" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="True" type="radio" '.$validation.'/><label class="besideRight" for="' . $questionNumber . 't">True</label></li>' . "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="False" type="radio" /><label class="besideRight" for="' . $questionNumber . 'f">False</label></li>' . "\n" . '</ol></div></fieldset></li>';
 }
 
+// LONG ANSWER
 if ($laQuestion != '') {
 	$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $laQuestion . ' ' . $helptext . '</label>' . "\n  " . '<textarea id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $laQuestionCode . '" cols="' . $_POST['laColumns'] . '" rows="' . $_POST['laRows'] . '" class="' . $required . '"><\/textarea>' . "\n" . '</li>';
 }
 
+// SHORT ANSWER
 if ($saQuestion != '') {
 	$maxlength = '';
 	if (is_numeric($_POST['saMaxLength'])) $maxlength = ' maxlength="'.$_POST['saMaxLength'].'"';
 	$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $saQuestion . ' ' . $helptext . '</label>' . "\n  " . '<input class="' . $required . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $saQuestionCode . '" type="text" '.$validation.'/>' . "\n" . '</li>';
 }
 
+// MULTIPLE CHOICE
 if ($mcQuestion != '') {
 	if ($_POST['mcType'] == 'checkbox') {
 		$questionNumber2 = $questionNumber . '[]';
@@ -48,7 +54,6 @@ if ($mcQuestion != '') {
 	}
 	if ($_POST['mcType'] == 'select') {
 		$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $mcQuestion . ' ' . $helptext . '</label>' . "\n  " . '<select class="" id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $mcQuestion . '">';
-
 		if ($_POST['answerA'] != '') {
 			$mcValueCode = str_replace('"',"'",$_POST['valueA']);
 			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerA'] . '</option>';
@@ -119,6 +124,11 @@ if ($mcQuestion != '') {
 		}
 		$mcQ .= "\n" . '</ol></fieldset></li>'; 
 	}
+}
+
+// SINGLE CHECKBOX
+if ($cbQuestion != '') {
+	$mcQ .= '<li class="">' . "\n  " . '<label class="besideRight" for="' . $questionNumber . '">' . "\n  " . '<input class="' . $required . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $cbQuestionCode . '" value="Y" type="checkbox" />' . $cbQuestion . ' ' . $helptext . '</label>' . "\n" . '</li>';
 }
 
 $fullForm = $_POST['previousQuestions'] . str_replace('class=" ','class="',str_replace(' class=""','',$mcQ));
@@ -406,49 +416,14 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
 </li>
 </fieldset>
 
-<!--  DROP-DOWN BOX
-<fieldset title="Drop-Down Box">
-<legend><a href="javascript:toggleElementB('dropDown');">Drop-Down Box</a></legend>
-<li class="jsHide" id="dropDown">
-
-    <label for="ddQuestion">Question</label>
-    <input class="xlWidth" id="ddQuestion" name="ddQuestion" title="Drop-Down Question" type="text" />
-    <ol type="A">
-        <li>
-            <label for="">Answer A</label>
-            <input class="xlWidth" id="answerA" name="answerA" title="Answer A" type="text" />
-        </li>
-        <li>
-            <label for="">Answer B</label>
-            <input class="xlWidth" id="answerB" name="answerB" title="Answer B" type="text" />
-        </li>
-        <li>
-            <label for="">Answer C</label>
-            <input class="xlWidth" id="answerC" name="answerC" title="Answer C" type="text" />
-        </li>
-        <li>
-            <label for="">Answer D</label>
-            <input class="xlWidth" id="answerD" name="answerD" title="Answer D" type="text" />
-        </li>
-        <li>
-            <label for="">Answer E</label>
-            <input class="xlWidth" id="answerE" name="answerE" title="Answer E" type="text" />
-        </li>
-        <li>
-            <label for="">Answer F</label>
-            <input class="xlWidth" id="answerF" name="answerF" title="Answer F" type="text" />
-        </li>
-        <li>
-            <label for="">Answer G</label>
-            <input class="xlWidth" id="answerG" name="answerG" title="Answer G" type="text" />
-        </li>
-        <li>
-            <label for="">Answer H</label>
-            <input class="xlWidth" id="answerH" name="answerH" title="Answer H" type="text" />
-        </li>
-    </ol>
+<!--  SINGLE CHECKBOX  -->
+<fieldset title="Single Checkbox">
+<legend><a href="javascript:toggleElementB('singleCheckbox');">Single Checkbox</a></legend>
+<li class="jsHide" id="singleCheckbox">
+    <label for="cbQuestion">Question</label>
+    <input class="xlWidth" id="cbQuestion" name="cbQuestion" title="Single Checkbox Question" type="text" />
 </li>
-</fieldset>  -->
+</fieldset>
 
 <li class="submitButton"><input type="submit" /></li>
 </ol>
