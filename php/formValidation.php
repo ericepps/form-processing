@@ -212,6 +212,8 @@ if ($eFormError) { die(); }
 
 // create delimited file
 if (isset($_POST['delimFile']) && $_POST['delimFile'] == 'Y') include('form2Delimited.php');
+// insert into database
+if ($_POST['dbInsert'] == 'Y') include('form2MySQL.php');
 // send results as email
 if (isset($_POST['emailSend']) && $_POST['emailSend'] == 'Y') include('form2Email.php');
 // send email notification
