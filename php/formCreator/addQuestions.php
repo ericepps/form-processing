@@ -49,7 +49,7 @@ if ($mcQuestion != '') {
 		$questionNumber2 = $questionNumber . '[]';
 		$questionType = 'checkbox';
 	} else {
-		$questionNumber2 = $questionNumber;
+		$questionNumber2 = $questionNumber . '[]';
 		$questionType = 'radio';
 	}
 	if ($_POST['mcType'] == 'select') {
