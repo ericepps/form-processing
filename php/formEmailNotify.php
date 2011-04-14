@@ -4,7 +4,7 @@ require_once $swiftFolder."Swift/Connection/SMTP.php";
 $swift =& new Swift(new Swift_Connection_SMTP($smtpServer));
 $message = '';
 if (isset($_POST['emailNotifyMessage'])) {
-	$message .= htmlspecialchars($_POST['emailNotifyMessage']);
+	$message .= replaceWithFieldValues(htmlspecialchars($_POST['emailNotifyMessage']));
 } else if (isset($_POST['emailNotifyHTML'])) {
 	$fileName = $_SERVER['DOCUMENT_ROOT'].$_POST['emailNotifyHTML'];
 	if (is_file($fileName)) {
@@ -17,7 +17,7 @@ if (isset($_POST['emailNotifyMessage'])) {
 	$message .= "A " . htmlspecialchars($_POST['emailSubject']) . " form was completed and the results have been omitted for security reasons.";
 }
 
-$subject = htmlspecialchars($_POST['emailSubject']);
+$subject = replaceWithFieldValues(htmlspecialchars($_POST['emailSubject']));
 
 $swiftMessage =& new Swift_Message($subject, $message, "text/html");
 if (isset($_POST['emailReply']) && $_POST['emailReply'] !== '') {

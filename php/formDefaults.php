@@ -1,6 +1,11 @@
 <?php
 // set defaults (file locations, SMTP servers, etc) in this file
 
+
+// show PHP errors, send a debug email containing form content to debug email address when 
+//  set to true
+$debugForms = false;
+
 /*********************************************************************************************
 *                                   form2Email DEFAULTS                                      *
 *********************************************************************************************/
@@ -10,7 +15,7 @@ $swiftFolder = "";
 $smtpServer = "";
 // the email address to send the message from
 $smtpFrom = "";
-// email address to catch all debugging and/or error emails
+// email address to catch all debugging, error and/or spam emails (subject labeled w/ [FORMSPAM])
 $errorEmail = "";
 
 /*********************************************************************************************

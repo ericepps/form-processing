@@ -36,7 +36,7 @@ $message .= "<br/>Web User Agent: ".$_SERVER['HTTP_USER_AGENT'];
 $message .= "<br/>Referring Site: ".$_SERVER['HTTP_REFERER'];
 $message .= "<br/>Script Name: ".$_SERVER['SCRIPT_FILENAME'];
 
-$subject = htmlspecialchars($_POST['emailSubject']);
+$subject = replaceWithFieldValues(htmlspecialchars($_POST['emailSubject']));
 $recipients =& new Swift_RecipientList();
 if ($spam) {
 	$recipients->addTo($errorEmail);

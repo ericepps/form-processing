@@ -1,6 +1,6 @@
 <?php
-//set $debugForms to true to see PHP errors and receive debugging emails to email address defined in formDefaults
-$debugForms = false;
+// include the file that contains all the server-specific defaults
+include('formDefaults.php');
 
 if ($debugForms) { ini_set('display_errors','on'); }
 
@@ -20,9 +20,6 @@ if (substr($_SERVER['HTTP_REFERER'],strlen($_SERVER['HTTP_REFERER'])-1) == '/') 
 } else {
 	$uriFileName = $_SERVER['DOCUMENT_ROOT'].str_replace($protocol.$_SERVER['HTTP_HOST'],'',$_SERVER['HTTP_REFERER']);
 }
-
-// include the file that contains all the server-specific defaults
-include('formDefaults.php');
 
 /*********************************************************************************************
 *                                   getStringByStartEnd()                                    *
@@ -44,6 +41,23 @@ function getStringByStartEnd($haystack='',$startString='',$endString='',$offset=
 
 function getAttributeValue($haystack='',$needle='') {
 	return substr(getStringByStartEnd($haystack,$needle.'="','"'),strlen($needle)+2,strlen(getStringByStartEnd($haystack,$needle.'="','"'))-(strlen($needle)+3));
+}
+
+/*********************************************************************************************
+*                                 replaceWithFieldValues()                                   *
+**********************************************************************************************
+
+	This funtion will replace any occurrences of a field name in the form [fieldName] 
+	in a block of text with a value from the POST                                          	*/
+	
+function replaceWithFieldValues($text) {
+	if (strpos($text,'[') !== false) {
+		$getField = getStringByStartEnd($text,'[',']');
+		$getFieldValue = htmlspecialchars($_POST[str_replace('[','',str_replace(']','',$getField))]);
+		$text = str_replace($getField,$getFieldValue,$text);
+		$text = replaceWithFieldValues($text);
+	}
+	return $text;
 }
 
 /**
@@ -213,7 +227,7 @@ if ($eFormError) { die(); }
 // create delimited file
 if (isset($_POST['delimFile']) && $_POST['delimFile'] == 'Y') include('form2Delimited.php');
 // insert into database
-if ($_POST['dbInsert'] == 'Y') include('form2MySQL.php');
+if (isset($_POST['dbInsert']) && $_POST['dbInsert'] == 'Y') include('form2MySQL.php');
 // send results as email
 if (isset($_POST['emailSend']) && $_POST['emailSend'] == 'Y') include('form2Email.php');
 // send email notification
