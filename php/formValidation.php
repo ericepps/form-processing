@@ -97,15 +97,73 @@ function strposall($haystack,$needle){
 *********************************************************************************************/
  
 $spam=false;
-// check for links in fields
-if ((count(strposall(implode($_POST), "http:"))/count($_POST)) > .2) {
-    $spam=true;
-}
-// check for wrong referrers
-if((isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],$_SERVER['HTTP_HOST']) === false)) {
-    $spam=true;
-}
 
+// if Akismet API key is present, check Akismet for spam
+if ($akismetKey != '') {
+	function akismet_comment_check( $key, $data ) {
+		$request = 'blog='. urlencode($data['blog']) .
+				   '&user_ip='. urlencode($data['user_ip']) .
+				   '&user_agent='. urlencode($data['user_agent']) .
+				   '&referrer='. urlencode($data['referrer']) .
+				   '&permalink='. urlencode($data['permalink']) .
+				   '&comment_type='. urlencode($data['comment_type']) .
+				   '&comment_author='. urlencode($data['comment_author']) .
+				   '&comment_author_email='. urlencode($data['comment_author_email']) .
+				   '&comment_author_url='. urlencode($data['comment_author_url']) .
+				   '&comment_content='. urlencode($data['comment_content']);
+		$host = $http_host = $key.'.rest.akismet.com';
+		$path = '/1.1/comment-check';
+		$port = 80;
+		$akismet_ua = "Akismet/2.5.3";
+		$content_length = strlen( $request );
+		$http_request  = "POST $path HTTP/1.0\r\n";
+		$http_request .= "Host: $host\r\n";
+		$http_request .= "Content-Type: application/x-www-form-urlencoded\r\n";
+		$http_request .= "Content-Length: {$content_length}\r\n";
+		$http_request .= "User-Agent: {$akismet_ua}\r\n";
+		$http_request .= "\r\n";
+		$http_request .= $request;
+		$response = '';
+		if( false != ( $fs = @fsockopen( $http_host, $port, $errno, $errstr, 10 ) ) ) {
+			 
+			fwrite( $fs, $http_request );
+	 
+			while ( !feof( $fs ) )
+				$response .= fgets( $fs, 1160 ); // One TCP-IP packet
+			fclose( $fs );
+			 
+			$response = explode( "\r\n\r\n", $response, 2 );
+		}
+		if ( 'true' == $response[1] )
+			return true;
+		else
+			return false;
+	}
+	// Call to comment check
+	$data = array('blog' => $protocol.$_SERVER['HTTP_HOST'],
+				  'user_ip' => $_SERVER['REMOTE_ADDR'],
+				  'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+				  'referrer' => $_SERVER['HTTP_REFERER'],
+				  'permalink' => '',
+				  'comment_type' => '',
+				  'comment_author' => '',
+				  'comment_author_email' => '',
+				  'comment_author_url' => '',
+				  'comment_content' => implode(",",$_POST));
+	$spam = akismet_comment_check( $akismetKey, $data );
+	// Passes back true (it's spam) or false (it's ham)
+
+} else {
+	// otherwise, use more crude, but somewhat useful methods:
+	// check for links in fields
+	if ((count(strposall(implode($_POST), "http:"))/count($_POST)) > .2) {
+		$spam=true;
+	}
+	// check for wrong referrers
+	if((isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],$_SERVER['HTTP_HOST']) === false)) {
+		$spam=true;
+	}
+}
 /*********************************************************************************************
 *                                    COLLECT FORM INFO                                       *
 **********************************************************************************************
