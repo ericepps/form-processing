@@ -1,126 +1,177 @@
 <?php
-if (is_numeric($_POST['qNum'])) {
-	$questionNumber = $_POST['namePrefix'] . "q" . $_POST['qNum'];
-} else {
-	$questionNumber = $_POST['namePrefix'] . $_POST['qNum'];
+foreach($_POST as $key=>$value) {
+	if (is_array($value)) {
+		foreach($value as $key2=>$value2) {
+			$clean[$key][$key2]=htmlspecialchars($value2);
+		}
+	} else {
+		$clean[$key]=htmlspecialchars($value);
+	}
 }
-$required = '';
-$validation = '';
-if ($_POST['qHelp'] != '') $helptext = '<span class="entryExample">'.$_POST['qHelp'].'</span>';
-if ($_POST['qRequired'] == 'Y') $required = ' required';
-if ($_POST['qvEmailAddress'] == 'Y') $validation = 'onblur="validateEmail(this);"';
-if ($_POST['qvPhoneNumber'] == 'Y') $validation = 'onblur="formatPhoneNum(this);"';
-if ($_POST['qvSSN'] == 'Y') $validation = 'onblur="validateSSN(this);"';
-if ($_POST['qvZip'] == 'Y') $validation = 'onblur="formatZip(this);"';
-if ($_POST['qvnDecimal'] != 'N') $validation = 'onblur="'.$_POST['qvnDecimal'].'(this,'.$_POST['qvnMinimum'].','.$_POST['qvnMaximum'].','.$_POST['qvnExact'].');"';
 
-$tfQuestion = trim($_POST['tfQuestion']);
+// Coming from initial form setup page? Then set up initial form fields.
+if ($clean['isInitial'] == 'Y') {
+	$fullForm = '<form action="#" id="'.$clean['formShortName'].'" method="post" onsubmit="return checkRequired();">' . "\n  " . '<input name="formName" type="hidden" value="'.$clean['formShortName'].'"/>' . "\n  " . '<input name="isSubmitted" type="hidden" value="Y"/>' . "\n  ";
+	if ($clean['formEmailSend'] == 'Y') {
+		$fullForm .= '<input id="emailSend" name="emailSend" type="hidden" value="Y"/>' . "\n  ";
+		$fullForm .= '<input id="emailRecipients" name="emailRecipients" type="hidden" value="'.$clean['formEmailRecipients'].'"/>' . "\n  ";
+		$fullForm .= '<input id="emailSubject" name="emailSubject" type="hidden" value="'.$clean['formName'].'"/>' . "\n  ";
+	}
+	if ($clean['formEmailNotify'] == 'Y') {
+		$fullForm .= '<input id="emailNotify" name="emailNotify" type="hidden" value="Y"/>' . "\n  ";
+		$fullForm .= '<input id="emailNRecipients" name="emailNRecipients" type="hidden" value="'.$clean['formEmailNRecipients'].'"/>' . "\n  ";
+		$fullForm .= '<input id="emailNotifyMessage" name="emailNotifyMessage" type="hidden" value="'.$clean['formNMessage'].'"/>' . "\n  ";
+		$fullForm .= '<input id="emailNotifyHTML" name="emailNotifyHTML" type="hidden" value="'.$clean['formNHTML'].'" />' . "\n  ";
+		$fullForm .= '<input id="emailSubject" name="emailSubject" type="hidden" value="'.$clean['formName'].'"/>' . "\n  ";
+	}
+	if ($clean['formDBInsert'] == 'Y') {
+		$fullForm .= '<input id="dbInsert" name="dbInsert" type="hidden" value="Y"/>' . "\n  ";
+	}
+	if ($clean['formDelimited'] == 'Y') {
+		$fullForm .= '<input id="delimFile" name="delimFile" type="hidden" value="Y"/>' . "\n  ";
+		$fullForm .= '<input id="delimType" name="delimType" type="hidden" value="'.$clean['formDelimType'][0].'"/>' . "\n  ";
+	}
+	$fullForm .= '<input id="formRedirect" name="formRedirect" type="hidden" value="'.$clean['formRedirect'].'"/>' . "\n  ";
+	$fullForm .= '<fieldset><legend>'.$clean['formName'].'</legend>' . "\n  ";
+}
+
+if (is_numeric($clean['qNum'])) {
+	$questionNumber = $clean['namePrefix'] . "q" . $clean['qNum'];
+} else {
+	$questionNumber = $clean['namePrefix'] . $clean['qNum'];
+}
+$classNames = '';
+$liClassNames = '';
+$validation = '';
+if ($clean['qHelp'] != '') $helptext = '<span class="entryExample">'.$clean['qHelp'].'</span>';
+if ($clean['qRequired'] == 'Y') $classNames = ' required';
+if ($clean['qWidth'] != '') $classNames .= $clean['qWidth'] . ' ';
+if ($clean['qWrap'] != '') $liClassNames .= $clean['qWrap'] . ' ';
+if ($clean['qvEmailAddress'] == 'Y') $validation = 'onblur="validateEmail(this);"';
+if ($clean['qvPhoneNumber'] == 'Y') $validation = 'onblur="formatPhoneNum(this);"';
+if ($clean['qvSSN'] == 'Y') $validation = 'onblur="validateSSN(this);"';
+if ($clean['qvZip'] == 'Y') $validation = 'onblur="formatZip(this);"';
+if ($clean['qvnDecimal'] != 'N') $validation = 'onblur="'.$clean['qvnDecimal'].'(this,'.$clean['qvnMinimum'].','.$clean['qvnMaximum'].','.$clean['qvnExact'].');"';
+
+$tfQuestion = trim($clean['tfQuestion']);
 $tfQuestionCode = str_replace('"',"'",$tfQuestion);
-$laQuestion = trim($_POST['laQuestion']);
+$laQuestion = trim($clean['laQuestion']);
 $laQuestionCode = str_replace('"',"'",$laQuestion);
-$saQuestion = trim($_POST['saQuestion']);
+$saQuestion = trim($clean['saQuestion']);
 $saQuestionCode = str_replace('"',"'",$saQuestion);
-$mcQuestion = trim($_POST['mcQuestion']);
+$mcQuestion = trim($clean['mcQuestion']);
 $mcQuestionCode = str_replace('"',"'",$mcQuestion);
-$cbQuestion = trim($_POST['cbQuestion']);
+$cbQuestion = trim($clean['cbQuestion']);
 $cbQuestionCode = str_replace('"',"'",$cbQuestion);
 $mcQ = "\n\n";
 
 // TRUE/FALSE
 if ($tfQuestion != '') {
-	$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="trueFalse">' . "\n  " . '<legend>' . $tfQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<div class="nopadding"><ol>' . "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 't" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="True" type="radio" '.$validation.'/><label class="besideRight" for="' . $questionNumber . 't">True</label></li>' . "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="False" type="radio" /><label class="besideRight" for="' . $questionNumber . 'f">False</label></li>' . "\n" . '</ol></div></fieldset></li>';
+	$tfFormat = $clean['tfFormat'][0];
+	if ($tfFormat == 'YN') {
+		$tfFormatShortT = 'Y';
+		$tfFormatShortF = 'N';
+		$tfFormatLongT = 'Yes';
+		$tfFormatLongF = 'No';
+	} else {
+		$tfFormatShortT = 'T';
+		$tfFormatShortF = 'F';
+		$tfFormatLongT = 'True';
+		$tfFormatLongF = 'False';
+	}
+	$mcQ .= '<li class="' . $liClassNames . '"><fieldset id="' . $questionNumber . '" class="trueFalse">' . "\n  " . '<legend>' . $tfQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<div class="nopadding"><ol>' . "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . $tfFormatShortT . '" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="'. $tfFormatLongT . '" type="radio" '.$validation.'/><label class="besideRight" for="' . $questionNumber . $tfFormatShortT . '">'. $tfFormatLongT . '</label></li>' . "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . $tfFormatShortF . '" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="'. $tfFormatLongF . '" type="radio" /><label class="besideRight" for="' . $questionNumber . $tfFormatShortF . '">'. $tfFormatLongF . '</label></li>' . "\n" . '</ol></div></fieldset></li>';
 }
 
 // LONG ANSWER
 if ($laQuestion != '') {
-	$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $laQuestion . ' ' . $helptext . '</label>' . "\n  " . '<textarea id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $laQuestionCode . '" cols="' . $_POST['laColumns'] . '" rows="' . $_POST['laRows'] . '" class="' . $required . '"><\/textarea>' . "\n" . '</li>';
+	$mcQ .= '<li class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $laQuestion . ' ' . $helptext . '</label>' . "\n  " . '<textarea id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $laQuestionCode . '" cols="' . $clean['laColumns'] . '" rows="' . $clean['laRows'] . '" class="' . $classNames . '"><\/textarea>' . "\n" . '</li>';
 }
 
 // SHORT ANSWER
 if ($saQuestion != '') {
 	$maxlength = '';
-	if (is_numeric($_POST['saMaxLength'])) $maxlength = ' maxlength="'.$_POST['saMaxLength'].'"';
-	$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $saQuestion . ' ' . $helptext . '</label>' . "\n  " . '<input class="' . $required . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $saQuestionCode . '" type="text" '.$validation.'/>' . "\n" . '</li>';
+	if (is_numeric($clean['saMaxLength'])) $maxlength = ' maxlength="'.$clean['saMaxLength'].'"';
+	$mcQ .= '<li class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $saQuestion . ' ' . $helptext . '</label>' . "\n  " . '<input class="' . $classNames . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $saQuestionCode . '" type="text" '.$validation.'/>' . "\n" . '</li>';
 }
 
 // MULTIPLE CHOICE
 if ($mcQuestion != '') {
-	if ($_POST['mcType'] == 'checkbox') {
+	if ($clean['mcType'] == 'checkbox') {
 		$questionNumber2 = $questionNumber . '[]';
 		$questionType = 'checkbox';
 	} else {
 		$questionNumber2 = $questionNumber . '[]';
 		$questionType = 'radio';
 	}
-	if ($_POST['mcType'] == 'select') {
-		$mcQ .= '<li class="">' . "\n  " . '<label for="' . $questionNumber . '">' . $mcQuestion . ' ' . $helptext . '</label>' . "\n  " . '<select class="" id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $mcQuestion . '">';
-		if ($_POST['answerA'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueA']);
-			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerA'] . '</option>';
+	if ($clean['mcType'] == 'select') {
+		$mcQ .= '<li class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $mcQuestion . ' ' . $helptext . '</label>' . "\n  " . '<select class="" id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $mcQuestion . '">';
+		if ($clean['answerA'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueA']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $clean['answerA'] . '</option>';
 		}
-		if ($_POST['answerB'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueB']);
-			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerB'] . '</option>';
+		if ($clean['answerB'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueB']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $clean['answerB'] . '</option>';
 		}
-		if ($_POST['answerC'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueC']);
-			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerC'] . '</option>';
+		if ($clean['answerC'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueC']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $clean['answerC'] . '</option>';
 		}
-		if ($_POST['answerD'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueD']);
-			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerD'] . '</option>';
+		if ($clean['answerD'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueD']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $clean['answerD'] . '</option>';
 		}
-		if ($_POST['answerE'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueE']);
-			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerE'] . '</option>';
+		if ($clean['answerE'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueE']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $clean['answerE'] . '</option>';
 		}
-		if ($_POST['answerF'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueF']);
-			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerF'] . '</option>';
+		if ($clean['answerF'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueF']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $clean['answerF'] . '</option>';
 		}
-		if ($_POST['answerG'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueG']);
-			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerG'] . '</option>';
+		if ($clean['answerG'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueG']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $clean['answerG'] . '</option>';
 		}
-		if ($_POST['answerH'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueH']);
-			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $_POST['answerH'] . '</option>';
+		if ($clean['answerH'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueH']);
+			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $clean['answerH'] . '</option>';
 		}
 		$mcQ .= "\n  </select></li>";
 	} else {
 		// either a radio or checkbox grouping
-		$mcQ .= '<li><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<ol>';
-		if ($_POST['answerA'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueA']);
-			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'A" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'A">' . $_POST['answerA'] . '</label></li>'; 
+		$mcQ .= '<li class="' . $liClassNames . '"><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<ol>';
+		if ($clean['answerA'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueA']);
+			$mcQ .= "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . 'A" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'A">' . $clean['answerA'] . '</label></li>'; 
 		}
-		if ($_POST['answerB'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueB']);
-			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'b" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'b">' . $_POST['answerB'] . '</label></li>'; 
+		if ($clean['answerB'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueB']);
+			$mcQ .= "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . 'B" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'B">' . $clean['answerB'] . '</label></li>'; 
 		}
-		if ($_POST['answerC'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueC']);
-			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'c" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'c">' . $_POST['answerC'] . '</label></li>'; 
+		if ($clean['answerC'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueC']);
+			$mcQ .= "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . 'C" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'C">' . $clean['answerC'] . '</label></li>'; 
 		}
-		if ($_POST['answerD'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueD']);
-			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'd" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'd">' . $_POST['answerD'] . '</label></li>'; 
+		if ($clean['answerD'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueD']);
+			$mcQ .= "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . 'D" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'D">' . $clean['answerD'] . '</label></li>'; 
 		}
-		if ($_POST['answerE'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueE']);
-			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'e" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'e">' . $_POST['answerE'] . '</label></li>'; 
+		if ($clean['answerE'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueE']);
+			$mcQ .= "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . 'E" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'E">' . $clean['answerE'] . '</label></li>'; 
 		}
-		if ($_POST['answerF'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueF']);
-			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'f" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'f">' . $_POST['answerF'] . '</label></li>';
+		if ($clean['answerF'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueF']);
+			$mcQ .= "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . 'F" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'F">' . $clean['answerF'] . '</label></li>';
 		}
-		if ($_POST['answerG'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueG']);
-			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'g" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'g">' . $_POST['answerG'] . '</label></li>'; 
+		if ($clean['answerG'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueG']);
+			$mcQ .= "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . 'G" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'g">' . $clean['answerG'] . '</label></li>'; 
 		}
-		if ($_POST['answerH'] != '') {
-			$mcValueCode = str_replace('"',"'",$_POST['valueH']);
-			$mcQ .= "\n    " . '<li><input class="' . $required . '" id="' . $questionNumber . 'h" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'h">' . $_POST['answerH'] . '</label></li>';
+		if ($clean['answerH'] != '') {
+			$mcValueCode = str_replace('"',"'",$clean['valueH']);
+			$mcQ .= "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . 'H" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'h">' . $clean['answerH'] . '</label></li>';
 		}
 		$mcQ .= "\n" . '</ol></fieldset></li>'; 
 	}
@@ -128,12 +179,12 @@ if ($mcQuestion != '') {
 
 // SINGLE CHECKBOX
 if ($cbQuestion != '') {
-	$mcQ .= '<li class="">' . "\n  " . '<label class="besideRight" for="' . $questionNumber . '">' . "\n  " . '<input class="' . $required . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $cbQuestionCode . '" value="Y" type="checkbox" />' . $cbQuestion . ' ' . $helptext . '</label>' . "\n" . '</li>';
+	$mcQ .= '<li class="' . $liClassNames . '">' . "\n  " . '<label class="besideRight" for="' . $questionNumber . '">' . "\n  " . '<input class="' . $classNames . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $cbQuestionCode . '" value="Y" type="checkbox" />' . $cbQuestion . ' ' . $helptext . '</label>' . "\n" . '</li>';
 }
 
-$fullForm = $_POST['previousQuestions'] . str_replace('class=" ','class="',str_replace(' class=""','',$mcQ));
-$namePrefix = $_POST['namePrefix'];
-if ($_POST['qNum'] < 1) { $qNum = 1; } else { $qNum = $_POST['qNum'] + 1; }
+$fullForm .= $clean['previousQuestions'] . str_replace('class=" ','class="',str_replace(' class=""','',$mcQ));
+$namePrefix = $clean['namePrefix'];
+if ($clean['qNum'] < 1) { $qNum = 1; } else { $qNum = $clean['qNum'] + 1; }
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -205,6 +256,11 @@ function getElementsByClassName(oElm, strTagName, strClassName)
 	}
 	return (arrReturnElements)
 }
+function finishForm() {
+	var finishedForm = document.getElementById('previousQuestions').value;
+	finishedForm = finishedForm + '<li class="submitButton"><input type="submit" /></li></ol></fieldset></form>';
+	document.getElementById('fullForm').value = finishedForm;
+}
 // initialize code coloring
 // http://www.cdolivet.com/index.php?page=editArea
 editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight: true, allow_toggle: false });
@@ -212,6 +268,12 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
 </head>
 
 <body>
+<form method="post" action="finalForm.php" onsubmit="return finishForm()">
+<ol class="nobullet nopadding">
+<textarea name="fullForm" id="fullForm" style="position:absolute;width:10px;height:10px;left:-100px;top:-100px;"></textarea>
+<li class="submitButton"><input type="submit" value=" Finish Form > " /></li>
+</ol>
+</form>
 <form method="post" action="addQuestions.php">
 <textarea name="previousQuestions" id="previousQuestions" style="width:99.5%;" rows="8" wrap="off">
 <?php echo $fullForm; ?>
@@ -235,6 +297,29 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
         <label for="qHelp">Help Text</label>
         <input type="text" name="qHelp" id="qHelp" class="xlWidth" />
     </li>
+    <li>
+        <label for="qWrap">Wrapping</label>
+        <select name="qWrap" id="qWrap" size="5" multiple="multiple">
+        	<option value="floatLeft">Wrap to Right (float:left)</option>
+        	<option value="floatRight">Wrap to Left (float:right)</option>
+        	<option value="floatNone">No Wrapping (float:none)</option>
+        	<option value="clearLeft">Stop Wrap to Right (clear:left)</option>
+        	<option value="clearRight">Stop Wrap to Left (clear:right)</option>
+		</select>
+    </li>
+    <li>
+        <label for="qWidth">Width</label>
+        <select name="qWidth" id="qWidth">
+        	<option value=""></option>
+            <option value="xxlWidth">XXL</option>
+            <option value="xlWidth">XL</option>
+            <option value="lWidth">L</option>
+            <option value="mWidth">M</option>
+            <option value="sWidth">S</option>
+            <option value="xsWidth">XS</option>
+            <option value="xxsWidth">XXS</option>
+        </select>
+	</li>
 </fieldset>
 
 <!--  SHORT ANSWER  -->
@@ -332,57 +417,65 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
             <label for="mcValueA" class="floatLeft" style="margin-right:1em;">Value A<br/>
             <input class="sWidth" id="mcValueA" name="valueA" title="Value A" type="text" value="a" />
             </label>
-            <label for="answerA">Display A</label>
+            <label for="answerA">Display A<br />
             <input class="xlWidth" id="answerA" name="answerA" title="Answer A" type="text" />
+            </label>
         </li>
-        <li>
+        <li class="clearLeft">
             <label for="mcValueB" class="floatLeft" style="margin-right:1em;">Value B<br/>
             <input class="sWidth" id="mcValueB" name="valueB" title="Value B" type="text" value="b" />
             </label>
-            <label for="answerB">Display B</label>
+            <label for="answerB">Display B<br />
             <input class="xlWidth" id="answerB" name="answerB" title="Answer B" type="text" />
+            </label>
         </li>
-        <li>
+        <li class="clearLeft">
             <label for="mcValueC" class="floatLeft" style="margin-right:1em;">Value C<br/>
             <input class="sWidth" id="mcValueC" name="valueC" title="Value C" type="text" value="c" />
             </label>
-            <label for="answerC">Display C</label>
+            <label for="answerC">Display C<br />
             <input class="xlWidth" id="answerC" name="answerC" title="Answer C" type="text" />
+            </label>
         </li>
-        <li>
+        <li class="clearLeft">
             <label for="mcValueD" class="floatLeft" style="margin-right:1em;">Value D<br/>
             <input class="sWidth" id="mcValueD" name="valueD" title="Value D" type="text" value="d" />
             </label>
-            <label for="answerD">Display D</label>
+            <label for="answerD">Display D<br />
             <input class="xlWidth" id="answerD" name="answerD" title="Answer D" type="text" />
+            </label>
         </li>
-        <li>
+        <li class="clearLeft">
             <label for="mcValueE" class="floatLeft" style="margin-right:1em;">Value E<br/>
             <input class="sWidth" id="mcValueE" name="valueE" title="Value E" type="text" value="e" />
             </label>
-            <label for="answerE">Display E</label>
+            <label for="answerE">Display E<br />
             <input class="xlWidth" id="answerE" name="answerE" title="Answer E" type="text" />
+            </label>
         </li>
-        <li>
+        <li class="clearLeft">
             <label for="mcValueF" class="floatLeft" style="margin-right:1em;">Value F<br/>
             <input class="sWidth" id="mcValueF" name="valueF" title="Value F" type="text" value="f" />
             </label>
-            <label for="answerF">Display F</label>
+            <label for="answerF">Display F<br />
             <input class="xlWidth" id="answerF" name="answerF" title="Answer F" type="text" />
+            </label>
         </li>
-        <li>
+        <li class="clearLeft">
             <label for="mcValueG" class="floatLeft" style="margin-right:1em;">Value G<br/>
             <input class="sWidth" id="mcValueG" name="valueG" title="Value G" type="text" value="g" />
             </label>
-            <label for="answerG">Display G</label>
+            <label for="answerG">Display G<br />
             <input class="xlWidth" id="answerG" name="answerG" title="Answer G" type="text" />
+            </label>
         </li>
-        <li>
+        <li class="clearLeft">
             <label for="mcValueH" class="floatLeft" style="margin-right:1em;">Value H<br/>
             <input class="sWidth" id="mcValueH" name="valueH" title="Value H" type="text" value="h" />
             </label>
-            <label for="answerH">Display H</label>
+            <label for="answerH">Display H<br />
             <input class="xlWidth" id="answerH" name="answerH" title="Answer H" type="text" />
+            </label>
         </li>
     </ol>
 </li></ol>
@@ -390,11 +483,19 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
 
 <!--  TRUE/FALSE  -->
 <fieldset title="True/False">
-<legend><a href="javascript:toggleElementB('trueFalse');">True/False</a></legend>
+<legend><a href="javascript:toggleElementB('trueFalse');">True/False or Yes/No</a></legend>
 <li class="jsHide" id="trueFalse">
+<ol class="nobullet nopadding">
+<li>
     <label for="tfQuestion">Question</label>
     <input class="xlWidth" id="tfQuestion" name="tfQuestion" title="True/False Question" type="text" />
 </li>
+<li><fieldset id="tfFormat" class="multipleChoice">
+  <legend>Format </legend>
+  <ol>
+    <li><input id="tfFormatA" name="tfFormat[]" title="Format" value="YN" type="radio" /><label class="besideRight" for="tfFormatYN">Yes/No</label></li>
+    <li><input id="tfFormatb" name="tfFormat[]" title="Format" value="TF" type="radio" /><label class="besideRight" for="tfFormatTF">True/False</label></li>
+</ol></fieldset></li>
 </fieldset>
 
 <!--  LONG ANSWER  -->
@@ -425,7 +526,7 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
 </li>
 </fieldset>
 
-<li class="submitButton"><input type="submit" /></li>
+<li class="submitButton"><input type="submit" value=" Add Question ^ " /></li>
 </ol>
 </form>
 <script type="text/javascript">jsHide();</script>
