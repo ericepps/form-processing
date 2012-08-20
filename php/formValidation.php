@@ -9,16 +9,23 @@ if ($_POST['isSubmitted'] == 'Y') {
 
 $uniqueFormID = htmlspecialchars($_POST['formName']).'-'.date('YzHis').'-'.rand(0,9999);
 
+// check for https
 if (isset($_SERVER['HTTPS'])) {
 	$protocol = 'https://';
 } else {
 	$protocol = 'http://';
 }
-
-if (substr($_SERVER['HTTP_REFERER'],strlen($_SERVER['HTTP_REFERER'])-1) == '/') {
-	$uriFileName = $_SERVER['DOCUMENT_ROOT'].str_replace($protocol.$_SERVER['HTTP_HOST'],'',$_SERVER['HTTP_REFERER']).'index.html'; 
+// strip out query strings
+if (strpos($_SERVER['HTTP_REFERER'],'?') === false) {
+	$refererURL = $_SERVER['HTTP_REFERER'];
 } else {
-	$uriFileName = $_SERVER['DOCUMENT_ROOT'].str_replace($protocol.$_SERVER['HTTP_HOST'],'',$_SERVER['HTTP_REFERER']);
+	$refererURL = substr($_SERVER['HTTP_REFERER'],0,strpos($_SERVER['HTTP_REFERER'],'?'));
+}
+// assemble the URL
+if (substr($_SERVER['HTTP_REFERER'],strlen($_SERVER['HTTP_REFERER'])-1) == '/') {
+	$uriFileName = $_SERVER['DOCUMENT_ROOT'].str_replace($protocol.$_SERVER['HTTP_HOST'],'',$refererURL).'index.html'; 
+} else {
+	$uriFileName = $_SERVER['DOCUMENT_ROOT'].str_replace($protocol.$_SERVER['HTTP_HOST'],'',$refererURL);
 }
 
 /*********************************************************************************************
