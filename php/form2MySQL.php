@@ -27,7 +27,11 @@ foreach($_POST as $key=>$value) {
 						$line .= "\"".$delimiter;
 						$arrayList .= $currentFormElementName.",";
 					} else {
-						$line .= "\"".nl2br($value)."\"".$delimiter;
+						if (strpos(getAttributeValue($value2,'class'),'encrypt') === FALSE) {
+							$line .= "\"".nl2br(htmlspecialchars($value))."\"".$delimiter;
+						} else {
+							$line .= "AES_ENCRYPT('".nl2br(htmlspecialchars($value))."','".$mySQLAESKeyStr."')".$delimiter;
+						}
 					}
 					$nameList .= getAttributeValue($value2,'name').",";
 				}

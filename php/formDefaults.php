@@ -41,6 +41,9 @@ $mySQLServer = '';
 $mySQLUsername = '';
 $mySQLPassword = '';
 $mySQLSchema = '';
+// key string for AES encryption
+$mySQLAESKeyStr = '';
+
 
 /*********************************************************************************************
 *                                  form2Eform DEFAULTS                                       *

@@ -25,7 +25,7 @@ html, body { font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; fon
 iframe#frame_fullForm { position:absolute; }
 body { margin: 0px; padding: .25%; }
 </style>
-<script language="javascript" type="text/javascript" src="editarea/edit_area/edit_area_full.js"></script>
+<script language="javascript" type="text/javascript" src="/~eppse/edit_area/edit_area_full.js"></script>
 <script type="text/javascript">
 function showElement(elName) {
 	document.getElementById(elName).style.display = 'block';

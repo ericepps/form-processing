@@ -33,6 +33,7 @@ if ($clean['isInitial'] == 'Y') {
 	}
 	$fullForm .= '<input id="formRedirect" name="formRedirect" type="hidden" value="'.$clean['formRedirect'].'"/>' . "\n  ";
 	$fullForm .= '<fieldset><legend>'.$clean['formName'].'</legend>' . "\n  ";
+	$fullForm .= '<ol class="nobullet">' . "\n  ";
 }
 
 if (is_numeric($clean['qNum'])) {
@@ -44,9 +45,10 @@ $classNames = '';
 $liClassNames = '';
 $validation = '';
 if ($clean['qHelp'] != '') $helptext = '<span class="entryExample">'.$clean['qHelp'].'</span>';
-if ($clean['qRequired'] == 'Y') $classNames = ' required';
+if ($clean['qRequired'] == 'Y') $classNames = ' required ';
 if ($clean['qWidth'] != '') $classNames .= $clean['qWidth'] . ' ';
 if ($clean['qWrap'] != '') $liClassNames .= $clean['qWrap'] . ' ';
+if ($clean['qEncrypt'] == 'Y') $classNames .= 'encrypt ';
 if ($clean['qvEmailAddress'] == 'Y') $validation = 'onblur="validateEmail(this);"';
 if ($clean['qvPhoneNumber'] == 'Y') $validation = 'onblur="formatPhoneNum(this);"';
 if ($clean['qvSSN'] == 'Y') $validation = 'onblur="validateSSN(this);"';
@@ -197,7 +199,7 @@ if ($clean['qNum'] < 1) { $qNum = 1; } else { $qNum = $clean['qNum'] + 1; }
 ol>fieldset { margin-top:15px; }
 html, body { font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; font-size:12px; }
 </style>
-<script language="javascript" type="text/javascript" src="editarea/edit_area/edit_area_full.js"></script>
+<script language="javascript" type="text/javascript" src="/~eppse/edit_area/edit_area_full.js"></script>
 <script type="text/javascript">
 function showElement(elName) {
 	document.getElementById(elName).style.display = 'block';
@@ -275,7 +277,7 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
 </ol>
 </form>
 <form method="post" action="addQuestions.php">
-<textarea name="previousQuestions" id="previousQuestions" style="width:99.5%;" rows="8" wrap="off">
+<textarea name="previousQuestions" id="previousQuestions" style="width:99.5%;" rows="12" wrap="off">
 <?php echo $fullForm; ?>
 </textarea>
 <ol class="nobullet nopadding">
@@ -320,6 +322,10 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
             <option value="xxsWidth">XXS</option>
         </select>
 	</li>
+    <li class="clearLeft">
+        <input id="qEncrypt" name="qEncrypt" title="Encrypt contents? (database)" value="Y" type="checkbox" />
+        <label class="besideRight" for="qEncrypt">Encrypt contents? (database)</label>
+    </li>
 </fieldset>
 
 <!--  SHORT ANSWER  -->
