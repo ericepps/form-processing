@@ -81,19 +81,19 @@ if ($tfQuestion != '') {
 		$tfFormatLongT = 'True';
 		$tfFormatLongF = 'False';
 	}
-	$mcQ .= '<li class="' . $liClassNames . '"><fieldset id="' . $questionNumber . '" class="trueFalse">' . "\n  " . '<legend>' . $tfQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<div class="nopadding"><ol>' . "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . $tfFormatShortT . '" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="'. $tfFormatLongT . '" type="radio" '.$validation.'/><label class="besideRight" for="' . $questionNumber . $tfFormatShortT . '">'. $tfFormatLongT . '</label></li>' . "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . $tfFormatShortF . '" name="' . $questionNumber . '" title="' . $tfQuestionCode . '" value="'. $tfFormatLongF . '" type="radio" /><label class="besideRight" for="' . $questionNumber . $tfFormatShortF . '">'. $tfFormatLongF . '</label></li>' . "\n" . '</ol></div></fieldset></li>';
+	$mcQ .= '<li id="par-' . $questionNumber . '" class="' . $liClassNames . '"><fieldset id="' . $questionNumber . '" class="trueFalse">' . "\n  " . '<legend>' . $tfQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<div class="nopadding"><ol>' . "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . $tfFormatShortT . '" name="' . $questionNumber . '[]" title="' . $tfQuestionCode . '" value="'. $tfFormatLongT . '" type="radio" '.$validation.'/><label class="besideRight" for="' . $questionNumber . $tfFormatShortT . '">'. $tfFormatLongT . '</label></li>' . "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . $tfFormatShortF . '" name="' . $questionNumber . '[]" title="' . $tfQuestionCode . '" value="'. $tfFormatLongF . '" type="radio" /><label class="besideRight" for="' . $questionNumber . $tfFormatShortF . '">'. $tfFormatLongF . '</label></li>' . "\n" . '</ol></div></fieldset></li>';
 }
 
 // LONG ANSWER
 if ($laQuestion != '') {
-	$mcQ .= '<li class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $laQuestion . ' ' . $helptext . '</label>' . "\n  " . '<textarea id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $laQuestionCode . '" cols="' . $clean['laColumns'] . '" rows="' . $clean['laRows'] . '" class="' . $classNames . '"><\/textarea>' . "\n" . '</li>';
+	$mcQ .= '<li id="par-' . $questionNumber . '" class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $laQuestion . ' ' . $helptext . '</label>' . "\n  " . '<textarea id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $laQuestionCode . '" cols="' . $clean['laColumns'] . '" rows="' . $clean['laRows'] . '" class="' . $classNames . '"><\/textarea>' . "\n" . '</li>';
 }
 
 // SHORT ANSWER
 if ($saQuestion != '') {
 	$maxlength = '';
 	if (is_numeric($clean['saMaxLength'])) $maxlength = ' maxlength="'.$clean['saMaxLength'].'"';
-	$mcQ .= '<li class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $saQuestion . ' ' . $helptext . '</label>' . "\n  " . '<input class="' . $classNames . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $saQuestionCode . '" type="text" '.$validation.'/>' . "\n" . '</li>';
+	$mcQ .= '<li id="par-' . $questionNumber . '" class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $saQuestion . ' ' . $helptext . '</label>' . "\n  " . '<input class="' . $classNames . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $saQuestionCode . '" type="text" '.$validation.'/>' . "\n" . '</li>';
 }
 
 // MULTIPLE CHOICE
@@ -106,7 +106,7 @@ if ($mcQuestion != '') {
 		$questionType = 'radio';
 	}
 	if ($clean['mcType'] == 'select') {
-		$mcQ .= '<li class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $mcQuestion . ' ' . $helptext . '</label>' . "\n  " . '<select class="" id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $mcQuestion . '">';
+		$mcQ .= '<li id="par-' . $questionNumber . '" class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $mcQuestion . ' ' . $helptext . '</label>' . "\n  " . '<select class="" id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $mcQuestion . '">';
 		if ($clean['answerA'] != '') {
 			$mcValueCode = str_replace('"',"'",$clean['valueA']);
 			$mcQ .=  "\n    " . '<option value="'.$mcValueCode.'">' . $clean['answerA'] . '</option>';
@@ -142,7 +142,7 @@ if ($mcQuestion != '') {
 		$mcQ .= "\n  </select></li>";
 	} else {
 		// either a radio or checkbox grouping
-		$mcQ .= '<li class="' . $liClassNames . '"><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<ol>';
+		$mcQ .= '<li id="par-' . $questionNumber . '" class="' . $liClassNames . '"><fieldset id="' . $questionNumber . '" class="multipleChoice">' . "\n  " . '<legend>' . $mcQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<ol>';
 		if ($clean['answerA'] != '') {
 			$mcValueCode = str_replace('"',"'",$clean['valueA']);
 			$mcQ .= "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . 'A" name="' . $questionNumber2 . '" title="' . $mcQuestionCode . '" value="' . $mcValueCode . '" type="' . $questionType . '" /><label class="besideRight" for="' . $questionNumber . 'A">' . $clean['answerA'] . '</label></li>'; 
@@ -181,7 +181,7 @@ if ($mcQuestion != '') {
 
 // SINGLE CHECKBOX
 if ($cbQuestion != '') {
-	$mcQ .= '<li class="' . $liClassNames . '">' . "\n  " . '<label class="besideRight" for="' . $questionNumber . '">' . "\n  " . '<input class="' . $classNames . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $cbQuestionCode . '" value="Y" type="checkbox" />' . $cbQuestion . ' ' . $helptext . '</label>' . "\n" . '</li>';
+	$mcQ .= '<li id="par-' . $questionNumber . '" class="' . $liClassNames . '">' . "\n  " . '<label class="besideRight" for="' . $questionNumber . '">' . "\n  " . '<input class="' . $classNames . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $cbQuestionCode . '" value="Y" type="checkbox" />' . $cbQuestion . ' ' . $helptext . '</label>' . "\n" . '</li>';
 }
 
 $fullForm .= $clean['previousQuestions'] . str_replace('class=" ','class="',str_replace(' class=""','',$mcQ));
@@ -270,13 +270,13 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
 </head>
 
 <body>
-<form method="post" action="finalForm.php" onsubmit="return finishForm()">
+<form method="post" action="../../../../Websites/www.svcc.edu~eppse/formCreator/finalForm.php" onsubmit="return finishForm()">
 <ol class="nobullet nopadding">
 <textarea name="fullForm" id="fullForm" style="position:absolute;width:10px;height:10px;left:-100px;top:-100px;"></textarea>
 <li class="submitButton"><input type="submit" value=" Finish Form > " /></li>
 </ol>
 </form>
-<form method="post" action="addQuestions.php">
+<form method="post" action="../../../../Websites/www.svcc.edu~eppse/formCreator/addQuestions.php">
 <textarea name="previousQuestions" id="previousQuestions" style="width:99.5%;" rows="12" wrap="off">
 <?php echo $fullForm; ?>
 </textarea>
