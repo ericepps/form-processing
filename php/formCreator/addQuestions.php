@@ -8,6 +8,7 @@ foreach($_POST as $key=>$value) {
 		$clean[$key]=htmlspecialchars($value);
 	}
 }
+$mySQLCreate = $clean['mySQLCreate'] . "\n";
 
 // Coming from initial form setup page? Then set up initial form fields.
 if ($clean['isInitial'] == 'Y') {
@@ -26,6 +27,7 @@ if ($clean['isInitial'] == 'Y') {
 	}
 	if ($clean['formDBInsert'] == 'Y') {
 		$fullForm .= '<input id="dbInsert" name="dbInsert" type="hidden" value="Y"/>' . "\n  ";
+		$mySQLCreate = "CREATE TABLE ".$clean['formShortName']." (\nid int(11) NOT NULL AUTO_INCREMENT,\n";
 	}
 	if ($clean['formDelimited'] == 'Y') {
 		$fullForm .= '<input id="delimFile" name="delimFile" type="hidden" value="Y"/>' . "\n  ";
@@ -82,11 +84,13 @@ if ($tfQuestion != '') {
 		$tfFormatLongF = 'False';
 	}
 	$mcQ .= '<li id="par-' . $questionNumber . '" class="' . $liClassNames . '"><fieldset id="' . $questionNumber . '" class="trueFalse">' . "\n  " . '<legend>' . $tfQuestion . ' ' . $helptext . '</legend>' . "\n  " . '<div class="nopadding"><ol>' . "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . $tfFormatShortT . '" name="' . $questionNumber . '[]" title="' . $tfQuestionCode . '" value="'. $tfFormatLongT . '" type="radio" '.$validation.'/><label class="besideRight" for="' . $questionNumber . $tfFormatShortT . '">'. $tfFormatLongT . '</label></li>' . "\n    " . '<li><input class="' . $classNames . '" id="' . $questionNumber . $tfFormatShortF . '" name="' . $questionNumber . '[]" title="' . $tfQuestionCode . '" value="'. $tfFormatLongF . '" type="radio" /><label class="besideRight" for="' . $questionNumber . $tfFormatShortF . '">'. $tfFormatLongF . '</label></li>' . "\n" . '</ol></div></fieldset></li>';
+	if(trim($mySQLCreate) != '') $mySQLCreate .= ' ' . $questionNumber . ' VARCHAR(1) DEFAULT NULL,';
 }
 
 // LONG ANSWER
 if ($laQuestion != '') {
 	$mcQ .= '<li id="par-' . $questionNumber . '" class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $laQuestion . ' ' . $helptext . '</label>' . "\n  " . '<textarea id="' . $questionNumber . '" name="' . $questionNumber . '" title="' . $laQuestionCode . '" cols="' . $clean['laColumns'] . '" rows="' . $clean['laRows'] . '" class="' . $classNames . '"><\/textarea>' . "\n" . '</li>';
+	if(trim($mySQLCreate) != '') $mySQLCreate .= ' ' . $questionNumber . ' TEXT DEFAULT NULL,';
 }
 
 // SHORT ANSWER
@@ -94,6 +98,14 @@ if ($saQuestion != '') {
 	$maxlength = '';
 	if (is_numeric($clean['saMaxLength'])) $maxlength = ' maxlength="'.$clean['saMaxLength'].'"';
 	$mcQ .= '<li id="par-' . $questionNumber . '" class="' . $liClassNames . '">' . "\n  " . '<label for="' . $questionNumber . '">' . $saQuestion . ' ' . $helptext . '</label>' . "\n  " . '<input class="' . $classNames . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $saQuestionCode . '" type="text" '.$validation.'/>' . "\n" . '</li>';
+	if(trim($mySQLCreate) != '') {
+		if ($maxlength == '') {
+			$varchar = 100;
+		} else {
+			$varchar = $clean['saMaxLength'];
+		}
+		$mySQLCreate .= ' ' . $questionNumber . ' VARCHAR('.$varchar.') DEFAULT NULL,';
+	}
 }
 
 // MULTIPLE CHOICE
@@ -177,11 +189,16 @@ if ($mcQuestion != '') {
 		}
 		$mcQ .= "\n" . '</ol></fieldset></li>'; 
 	}
+	if(trim($mySQLCreate) != '') {
+		$varchar = max(strlen($clean['valueA']),strlen($clean['valueB']),strlen($clean['valueC']),strlen($clean['valueD']),strlen($clean['valueE']),strlen($clean['valueF']),strlen($clean['valueG']),strlen($clean['valueH']))+1;
+		$mySQLCreate .= ' ' . $questionNumber . ' VARCHAR('.$varchar.') DEFAULT NULL,';
+	}
 }
 
 // SINGLE CHECKBOX
 if ($cbQuestion != '') {
 	$mcQ .= '<li id="par-' . $questionNumber . '" class="' . $liClassNames . '">' . "\n  " . '<label class="besideRight" for="' . $questionNumber . '">' . "\n  " . '<input class="' . $classNames . '" id="' . $questionNumber . '" name="' . $questionNumber . '"'.$maxlength.' title="' . $cbQuestionCode . '" value="Y" type="checkbox" />' . $cbQuestion . ' ' . $helptext . '</label>' . "\n" . '</li>';
+	if(trim($mySQLCreate) != '') $mySQLCreate .= ' ' . $questionNumber . ' VARCHAR(1) DEFAULT NULL,';
 }
 
 $fullForm .= $clean['previousQuestions'] . str_replace('class=" ','class="',str_replace(' class=""','',$mcQ));
@@ -262,6 +279,11 @@ function finishForm() {
 	var finishedForm = document.getElementById('previousQuestions').value;
 	finishedForm = finishedForm + '<li class="submitButton"><input type="submit" /></li></ol></fieldset></form>';
 	document.getElementById('fullForm').value = finishedForm;
+	var finishedMySQL = document.getElementById('prevMySQLCreate').value;
+	if (finishedMySQL.trim() != '') {
+		finishedMySQL = finishedMySQL + '\n' + ' PRIMARY KEY (id), UNIQUE KEY id_UNIQUE (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8';
+		document.getElementById('mySQLCreate').value = finishedMySQL;
+	}
 }
 // initialize code coloring
 // http://www.cdolivet.com/index.php?page=editArea
@@ -270,15 +292,19 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
 </head>
 
 <body>
-<form method="post" action="../../../../Websites/www.svcc.edu~eppse/formCreator/finalForm.php" onsubmit="return finishForm()">
+<form method="post" action="finalForm.php" onsubmit="return finishForm()">
 <ol class="nobullet nopadding">
 <textarea name="fullForm" id="fullForm" style="position:absolute;width:10px;height:10px;left:-100px;top:-100px;"></textarea>
+<textarea name="mySQLCreate" id="mySQLCreate" style="position:absolute;width:10px;height:10px;left:-100px;top:-100px;"></textarea>
 <li class="submitButton"><input type="submit" value=" Finish Form > " /></li>
 </ol>
 </form>
-<form method="post" action="../../../../Websites/www.svcc.edu~eppse/formCreator/addQuestions.php">
+<form method="post" action="addQuestions.php">
 <textarea name="previousQuestions" id="previousQuestions" style="width:99.5%;" rows="12" wrap="off">
 <?php echo $fullForm; ?>
+</textarea>
+<textarea name="mySQLCreate" id="prevMySQLCreate" style="width:99.5%;<?php echo (trim($mySQLCreate)==""?'display:none;':''); ?>" rows="5">
+<?php echo $mySQLCreate; ?>
 </textarea>
 <ol class="nobullet nopadding">
 <fieldset title="Question Options">
@@ -301,12 +327,13 @@ editAreaLoader.init({ id : "previousQuestions", syntax: "html", start_highlight:
     </li>
     <li>
         <label for="qWrap">Wrapping</label>
-        <select name="qWrap" id="qWrap" size="5" multiple="multiple">
+        <select name="qWrap" id="qWrap" size="3" multiple="multiple">
         	<option value="floatLeft">Wrap to Right (float:left)</option>
         	<option value="floatRight">Wrap to Left (float:right)</option>
         	<option value="floatNone">No Wrapping (float:none)</option>
         	<option value="clearLeft">Stop Wrap to Right (clear:left)</option>
         	<option value="clearRight">Stop Wrap to Left (clear:right)</option>
+        	<option value="hide">Hidden</option>
 		</select>
     </li>
     <li>

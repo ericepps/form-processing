@@ -10,6 +10,7 @@ foreach($_POST as $key=>$value) {
 }
 
 $fullForm = $clean['fullForm'];
+$mySQLCreate = $clean['mySQLCreate'];
 $fullFormPreview = str_replace('<\/textarea>','</textarea>',str_replace('&gt;','>',str_replace('&lt;','<',str_replace('&quot;','"',$clean['fullForm']))));
 ?>
 
@@ -99,7 +100,8 @@ editAreaLoader.init({ id : "fullForm", syntax: "html", start_highlight: true, al
 <body>
 <form method="post" action="finalForm.php">
 <ol class="nobullet nopadding">
-<textarea name="fullForm" id="fullForm" style="width:99.5%;height:45%;display:block;top:0px;position:absolute;"><?php echo $fullForm; ?></textarea>
+<textarea name="fullForm" id="fullForm" style="width:99.5%;height:<?php echo ($mySQLCreate==""?'45':'35').'%'; ?>;display:block;top:0px;position:absolute;"><?php echo $fullForm; ?></textarea>
+<textarea name="mySQLCreate" id="mySQLCreate" style="<?php echo ($mySQLCreate==""?'left:-1000px;width:0px;height:0px':'width:99.5%;height:12%'); ?>;display:block;top:35%;position:absolute;"><?php echo $mySQLCreate; ?></textarea>
 <li class="submitButton" style="top:48%;display:block;position:absolute;""><input type="submit" value=" Finish Form > " /></li>
 </form>
 <div style="width:98.5%;height:45%; padding:.5%; background-color:#ddd; overflow:scroll;position:absolute;bottom:0px;"><h2>Preview:</h2><?php echo $fullFormPreview; ?></div>
