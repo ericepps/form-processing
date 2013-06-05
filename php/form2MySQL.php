@@ -1,10 +1,24 @@
 <?php
+$link = mysql_connect($mySQLServer, $mySQLUsername, $mySQLPassword) or die('Could not connect: ' . mysql_error());
+mysql_select_db($mySQLSchema) or die('Could not select database');
+
 $delimiter = ',';
 $extension = '.csv';
 $header = '';
 $line = '';
 $arrayList = '';
 $databName = split('-',$uniqueFormID);
+
+$query = 'SHOW COLUMNS FROM '.$databName[0];
+$result = mysql_query($query);
+$uniqueFormIDCol = false;
+while ($row = mysql_fetch_assoc($result)) {
+    if ($row['Field'] == 'uniqueFormID')  $uniqueFormIDCol = true;
+}
+if ($uniqueFormIDCol) {
+	$header = 'uniqueFormID,';
+	$line = '"'.$uniqueFormID.'",';
+}
 
 foreach($_POST as $key=>$value) {
 	foreach($sendingFormElement as $key2=>$value2) {
@@ -40,10 +54,6 @@ foreach($_POST as $key=>$value) {
 	}
 }
 
-
-$link = mysql_connect($mySQLServer, $mySQLUsername, $mySQLPassword) or die('Could not connect: ' . mysql_error());
-mysql_select_db($mySQLSchema) or die('Could not select database');
-
-$query = str_replace(',)',')','INSERT INTO '.$databName[0].' ('.$header.') VALUES ('.$line.')');
+$query = str_replace(',)',')','REPLACE INTO '.$databName[0].' ('.$header.') VALUES ('.$line.')');
 $result = mysql_query($query) or die('query error '.mysql_error());
 ?>
